@@ -1,0 +1,29 @@
+info:
+  name: 05 - Listar documentos con paginación
+  type: http
+  seq: 5
+
+http:
+  method: GET
+  url: "{{baseUrl}}/api/v1/admin/documents?page=1&limit=1"
+  params:
+    - name: page
+      value: "1"
+      type: query
+    - name: limit
+      value: "1"
+      type: query
+  auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "200"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

@@ -1,0 +1,31 @@
+info:
+  name: 06 - Actualizar documento
+  type: http
+  seq: 6
+
+http:
+  method: PATCH
+  url: "{{baseUrl}}/api/v1/admin/documents/{{documentId}}"
+  body:
+    type: json
+    data: |-
+      {
+        "title": "Y"
+      }
+  auth: inherit
+
+runtime:
+  variables:
+    - name: documentId
+      value: ""
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "200"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
