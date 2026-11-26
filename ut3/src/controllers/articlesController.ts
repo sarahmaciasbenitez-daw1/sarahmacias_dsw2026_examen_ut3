@@ -3,9 +3,9 @@
 // errorHandler with next(err).
 
 import type { NextFunction, Request, Response } from 'express';
-
 import { AppError } from '../errors/AppError.js';
 import * as articlesService from '../services/articlesService.js';
+import { AppErrorDescription } from '../errors/AppErrorDescription.js';
 
 export function list(req: Request, res: Response, next: NextFunction): void {
   try {
@@ -16,13 +16,19 @@ export function list(req: Request, res: Response, next: NextFunction): void {
   } catch (err) {
     next(err);
   }
+    const sinDescripcion = typeof req.query.sinDescripcion === 'string' ? req.query.sinDescripcion.trim() : '';
+    res.json(articlesService.list(page, limit, sinDescripcion || undefined));
+    
+    const filteredDocuments = sinDescripcion.filter(
+    (sinDescripcion) => sinDescripcion.title === 'sin Descripción',
+  );
 }
 
 export function getById(req: Request, res: Response, next: NextFunction): void {
   try {
     const article = articlesService.getById(String(req.params.articleId));
     if (!article) {
-      throw new AppError(404, `Article with id '${req.params.articleId}' not found`, 'NOT_FOUND');
+      throw new AppError(404, `Article with id '${req.params.articleId}' not found`, 'sinDescripcion');
     }
     res.json({ data: article });
   } catch (err) {
@@ -36,7 +42,7 @@ export function create(req: Request, res: Response, next: NextFunction): void {
   try {
     const { title, description } = req.body;
     if (!title || typeof title !== 'string') {
-      throw new AppError(400, 'Missing required field: title', 'BAD_REQUEST');
+      throw new AppErrorDescription(400, 'Missing required field: title', 'BAD_REQUEST');
     }
     const article = articlesService.create(
       title.trim(),
@@ -54,9 +60,9 @@ export function create(req: Request, res: Response, next: NextFunction): void {
 export function update(req: Request, res: Response, next: NextFunction): void {
   try {
     const { title, description } = req.body;
-    const article = articlesService.update(String(req.params.articleId), { title, description });
+    const article = articlesService.update(String(req.params.articleId), { title, /*description*/ });
     if (!article) {
-      throw new AppError(404, `Article with id '${req.params.articleId}' not found`, 'NOT_FOUND');
+      throw new AppError(404, `Article with id '${req.params.articleId}' not found`, 'sinDescripción');
     }
     res.json({ data: article });
   } catch (err) {

@@ -6,13 +6,13 @@ import { randomUUID } from 'node:crypto';
 export interface Article {
   id: string;
   title: string;
-  description: string;
+  //description: string;
   createdAt: string;
 }
 
 export interface ArticleChanges {
   title?: string;
-  description?: string;
+  //description?: string;
 }
 
 // The in-memory array now lives here, not in the routes.
@@ -24,6 +24,10 @@ export function list(page: number, limit: number) {
     data: articles.slice(start, start + limit),
     pagination: { page, limit, total: articles.length },
   };
+  const term = sinDescripcion?.trim().toLowerCase();
+  const filtered = term
+  ? articles.filter((articles) => articles.title.toLowerCase().includes(term))
+  : articles;
 }
 
 export function getById(id: string): Article | undefined {
@@ -34,7 +38,7 @@ export function create(title: string, description: string): Article {
   const article: Article = {
     id: randomUUID(),
     title,
-    description,
+    //description,
     createdAt: new Date().toISOString(),
   };
   articles.push(article);
@@ -49,8 +53,8 @@ export function update(id: string, changes: ArticleChanges): Article | undefined
   if (changes.title !== undefined) {
     article.title = changes.title;
   }
-  if (changes.description !== undefined) {
-    article.description = changes.description;
-  }
+  //if (changes.description !== undefined) {
+   // article.description = changes.description;
+ // }
   return article;
 }

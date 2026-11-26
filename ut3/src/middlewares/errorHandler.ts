@@ -2,6 +2,7 @@ import type { NextFunction, Request, Response } from 'express';
 
 import { env } from '../config/env.js';
 import { AppError } from '../errors/AppError.js';
+import { AppErrorDescription } from '../errors/AppErrorDescription.js';
 
 // Express recognises an error handler because it has FOUR parameters.
 // `_next` is never used, but it must be there: with three parameters Express
@@ -34,7 +35,7 @@ export function errorHandler(
   // express.json() throws a SyntaxError when the body is not valid JSON.
   // It is the client's fault, so it is a 400, not a 500.
   if (err instanceof SyntaxError && 'body' in err) {
-    res.status(400).json({ error: 'INVALID_JSON', message: 'Request body is not valid JSON' });
+    res.status(400).json({ error: 'INVALID_DESCRIPTION', message: 'Description must not contain ERROR' });
     return;
   }
 
